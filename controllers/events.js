@@ -3,9 +3,21 @@ const Evento = require('../models/Event')
 
 const getEvents = async( req = request, res = response ) => {
     const eventos = await Evento.find().populate('user', 'name');
+    
+    const mapEventos = eventos.map(  evento => {
+        
+        return {
+            ...evento.toJSON(),
+            user:{
+                uid: evento.user._id,
+                name: evento.user.name
+            }
+        }
+    });
+
     return res.json({
         ok: true,
-        eventos
+        eventos: mapEventos
     });
 }
 
